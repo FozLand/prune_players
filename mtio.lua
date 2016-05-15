@@ -23,6 +23,11 @@ mtio.serialize = function(o, f)
   end
 end
 
+function exists(name)
+    if type(name)~="string" then return false end
+    return os.rename(name,name) and true or false
+end
+
 mtio.write_auth = function(world_path, players)
 	local k = assert(io.open(world_path .. '/auth.txt', 'w'))
 	local r = assert(io.open(world_path .. '/auth.pruned', 'a'))
@@ -44,10 +49,19 @@ mtio.write_auth = function(world_path, players)
 end
 
 mtio.prune_player_files = function(world_path, players)
+	local dir_path = world_path..'/players/'
+	local filepath = 'pruned/'
+
+	if not exists(dir_path..filepath) then
+		os.execute('mkdir '..dir_path..filepath)
+	end
+
 	for _, name in ipairs(players) do
 		if not players[name].keep then
-			os.rename(world_path..'/players/'..name,
-			          world_path..'/players/pruned/'..name)
+			if exists(dir_path..name) then
+				assert(os.rename(dir_path..name,
+				                 dir_path..filepath..name))
+			end
 		end
 	end
 end

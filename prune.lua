@@ -1,10 +1,12 @@
 #!/usr/bin/lua
 
 local load_time_start = os.clock()
+print('Pruning player files...')
 local now = os.time()
 
 if #arg ~= 1 then
 	io.write(string.format('Usage:\n  %s <WorldPath>\n',arg[0]))
+	return
 end
 
 local load_players = function(world_path)
@@ -78,7 +80,8 @@ local recently_logged_in = function(player)
 end
 
 mtio = {}
-dofile('mtio.lua')
+local path = debug.getinfo(1).source:match("@?(.*/)")
+dofile(path..'mtio.lua')
 
 local world_path = arg[1]
 local players, player_count = load_players(world_path)
@@ -117,6 +120,6 @@ mtio.rewrite_unified_inventory_home(world_path, players)
 -- remove deleted players from news/news_stamps.mt
 mtio.rewrite_news_stamps(world_path, players)
 
-print('Loaded '..player_count..' players.')
+print('Found '..player_count..' players.')
 print('Removed '..removed_count..' players.')
 io.write(string.format('Finished in %.3fs\n',os.clock() - load_time_start))
