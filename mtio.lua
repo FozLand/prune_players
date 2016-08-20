@@ -171,3 +171,36 @@ mtio.rewrite_news_stamps = function(world_path, players)
 	mtio.serialize(data_out, f)
 	f:close()
 end
+
+mtio.rewrite_justice_records = function(world_path, players)
+	local filename = world_path..'/justice/data.mt'
+	local data_in  = dofile(filename)
+	local data_out = {
+		['inmates'] = {
+			['inactive'] = {},
+			['active'] = {}},
+		['records'] = {}}
+
+	for name, v in pairs(data_in.inmates.inactive) do
+		if players[name].keep then
+			data_out.inmates.inactive[name] = v
+		end
+	end
+
+	for name, v in pairs(data_in.inmates.active) do
+		if players[name].keep then
+			data_out.inmates.active[name] = v
+		end
+	end
+
+	for name, v in pairs(data_in.records) do
+		if players[name].keep then
+			data_out.records[name] = v
+		end
+	end
+
+	local f = assert(io.open(filename, 'w'))
+  f:write('return ')
+	mtio.serialize(data_out, f)
+	f:close()
+end

@@ -119,6 +119,8 @@ mtio.rewrite_u_skins(world_path, players)
 mtio.rewrite_unified_inventory_home(world_path, players)
 -- remove deleted players from news/news_stamps.mt
 mtio.rewrite_news_stamps(world_path, players)
+-- remove deleted players from news/news_stamps.mt
+mtio.rewrite_justice_records(world_path, players)
 
 print('Found '..player_count..' players.')
 print('Removed '..removed_count..' players.')
