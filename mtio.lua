@@ -204,3 +204,20 @@ mtio.rewrite_justice_records = function(world_path, players)
 	mtio.serialize(data_out, f)
 	f:close()
 end
+
+mtio.rewrite_stats = function(world_path, players)
+	local filename = world_path..'stats.mt'
+	local data_in = dofile(filename)
+	local data_out = {}
+
+	for name, v in pairs(data_in) do
+		if players[name].keep then
+			data_out[name] = v
+		end
+	end
+
+	local f = assert(io.open(filename, 'w'))
+	f:write('return ')
+	mtio.serialize(data_out, f)
+	f:close()
+end
