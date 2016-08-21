@@ -1,31 +1,31 @@
 mtio.serialize = function(o, f)
-  if type(o) == 'number' then
-    f:write(o)
-  elseif type(o) == 'string' then
-    f:write(string.format('%q', o))
-  elseif type(o) == 'table' then
+	if type(o) == 'number' then
+		f:write(o)
+	elseif type(o) == 'string' then
+		f:write(string.format('%q', o))
+	elseif type(o) == 'table' then
 		f:write('{')
 		local first = true
-    for k,v in pairs(o) do
+		for k,v in pairs(o) do
 			if first then
 				first = false
 			else
 				f:write(', ')
 			end
 			f:write('[')
-      mtio.serialize(k, f)
-      f:write('] = ')
-      mtio.serialize(v, f)
-    end
+			mtio.serialize(k, f)
+			f:write('] = ')
+			mtio.serialize(v, f)
+		end
 		f:write('}')
-  else
-    error('cannot serialize a ' .. type(o))
-  end
+	else
+		error('cannot serialize a ' .. type(o))
+	end
 end
 
 function exists(name)
-    if type(name)~="string" then return false end
-    return os.rename(name,name) and true or false
+	if type(name)~="string" then return false end
+	return os.rename(name,name) and true or false
 end
 
 mtio.write_auth = function(world_path, players)
@@ -150,7 +150,7 @@ mtio.rewrite_chat_next = function(world_path, players)
 	end
 
 	local f = assert(io.open(filename, 'w'))
-  f:write('return ')
+	f:write('return ')
 	mtio.serialize(data_out, f)
 	f:close()
 end
@@ -167,7 +167,7 @@ mtio.rewrite_news_stamps = function(world_path, players)
 	end
 
 	local f = assert(io.open(filename, 'w'))
-  f:write('return ')
+	f:write('return ')
 	mtio.serialize(data_out, f)
 	f:close()
 end
@@ -200,7 +200,7 @@ mtio.rewrite_justice_records = function(world_path, players)
 	end
 
 	local f = assert(io.open(filename, 'w'))
-  f:write('return ')
+	f:write('return ')
 	mtio.serialize(data_out, f)
 	f:close()
 end
