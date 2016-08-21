@@ -206,12 +206,12 @@ mtio.rewrite_justice_records = function(world_path, players)
 end
 
 mtio.rewrite_stats = function(world_path, players)
-	local filename = world_path..'stats.mt'
+	local filename = world_path..'/stats.mt'
 	local data_in = dofile(filename)
 	local data_out = {}
 
 	for name, v in pairs(data_in) do
-		if players[name].keep then
+		if players[name] and players[name].keep then
 			data_out[name] = v
 		end
 	end
