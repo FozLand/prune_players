@@ -76,7 +76,7 @@ mtio.rewrite_beds_spawns = function(world_path, players)
 	for line in string.gmatch(data, '([^\n]*)\n') do
 		local pattern = '([%S]*)%s([%S]*)%s([%S]*)%s([%S]*)'
 		for x, y, z, n in string.gmatch(line, pattern) do
-			if players[n].keep then
+			if players[n] and players[n].keep then
 				f:write(x..' '..y..' '..z..' '..n..'\n')
 			end
 		end
@@ -94,7 +94,7 @@ mtio.rewrite_homes = function(world_path, players)
 	for line in string.gmatch(data, '([^\n]*)\n') do
 		local pattern = '([%S]*)%s([%S]*)%s([%S]*)%s([%S]*)'
 		for x, y, z, n in string.gmatch(line, pattern) do
-			if players[n].keep then
+			if players[n] and players[n].keep then
 				f:write(x..' '..y..' '..z..' '..n..'\n')
 			end
 		end
@@ -112,7 +112,7 @@ mtio.rewrite_unified_inventory_home = function(world_path, players)
 	for line in string.gmatch(data, '([^\n]*)\n') do
 		local pattern = '([%S]*)%s([%S]*)%s([%S]*)%s([%S]*)'
 		for x, y, z, n in string.gmatch(line, pattern) do
-			if players[n].keep then
+			if players[n] and players[n].keep then
 				f:write(x..' '..y..' '..z..' '..n..'\n')
 			end
 		end
@@ -130,7 +130,7 @@ mtio.rewrite_u_skins = function(world_path, players)
 	for line in string.gmatch(data, '([^\n]*)\n') do
 		local pattern = '([%S]*)%s([%S]*)'
 		for n, c in string.gmatch(line, pattern) do
-			if players[n].keep then
+			if players[n] and players[n].keep then
 				f:write(n..' '..c..'\n')
 			end
 		end
@@ -144,7 +144,7 @@ mtio.rewrite_chat_next = function(world_path, players)
 	local data_out = {}
 
 	for name, v in pairs(data_in) do
-		if players[name].keep then
+		if players[name] and players[name].keep then
 			data_out[name] = v
 		end
 	end
@@ -161,7 +161,7 @@ mtio.rewrite_news_stamps = function(world_path, players)
 	local data_out = {}
 
 	for name, v in pairs(data_in) do
-		if players[name].keep then
+		if players[name] and players[name].keep then
 			data_out[name] = v
 		end
 	end
@@ -182,19 +182,19 @@ mtio.rewrite_justice_records = function(world_path, players)
 		['records'] = {}}
 
 	for name, v in pairs(data_in.inmates.inactive) do
-		if players[name].keep then
+		if players[name] and players[name].keep then
 			data_out.inmates.inactive[name] = v
 		end
 	end
 
 	for name, v in pairs(data_in.inmates.active) do
-		if players[name].keep then
+		if players[name] and players[name].keep then
 			data_out.inmates.active[name] = v
 		end
 	end
 
 	for name, v in pairs(data_in.records) do
-		if players[name].keep then
+		if players[name] and players[name].keep then
 			data_out.records[name] = v
 		end
 	end
