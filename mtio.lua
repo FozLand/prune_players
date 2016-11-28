@@ -56,14 +56,33 @@ mtio.prune_player_files = function(world_path, players)
 		os.execute('mkdir '..dir_path..filepath)
 	end
 
-	for _, name in ipairs(players) do
-		if not players[name].keep then
-			if exists(dir_path..name) then
-				assert(os.rename(dir_path..name,
-				                 dir_path..filepath..name))
-			end
+	-- Get all player files in the player directory
+	local fls = io.popen('find '..dir_path..' -maxdepth 1 -type f -printf "%f\n"')
+	local e = assert(io.open(dir_path..filepath..'extra.pruned', 'a'))
+	e:write('-----------------------------------------------------\n')
+	e:write('Extra player files pruned on '..os.date()..'\n')
+	e:write('-----------------------------------------------------\n')
+
+	local count = 0
+	for name in fls:lines() do
+		local move_it = false
+		if not players[name] then
+			move_it = true
+			count = count + 1
+			e:write(name..'\n')
+		elseif not players[name].keep then
+			move_it = true
+		end
+		if move_it and exists(dir_path..name) then
+			assert(os.rename(dir_path..name, dir_path..filepath..name))
 		end
 	end
+
+	e:write('\nTotal number of extra player files removed: '..count..'\n\n')
+	print('Removed '..count..' extra player files.')
+
+	fls:close()
+	e:close()
 end
 
 mtio.rewrite_beds_spawns = function(world_path, players)
