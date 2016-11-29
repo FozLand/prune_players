@@ -123,6 +123,8 @@ mtio.rewrite_news_stamps(world_path, players)
 mtio.rewrite_justice_records(world_path, players)
 -- remove deleted players from stats.mt
 mtio.rewrite_stats(world_path, players)
+-- remove deleted players from xban.db
+mtio.rewrite_xban_db(world_path, players)
 
 print('Found '..player_count..' players.')
 print('Removed '..removed_count..' players.')

@@ -1,6 +1,12 @@
 mtio.serialize = function(o, f)
 	if type(o) == 'number' then
 		f:write(o)
+	elseif type(o) == 'boolean' then
+		if o then
+			f:write('true')
+		else
+			f:write('false')
+		end
 	elseif type(o) == 'string' then
 		f:write(string.format('%q', o))
 	elseif type(o) == 'table' then
@@ -233,6 +239,40 @@ mtio.rewrite_stats = function(world_path, players)
 		if players[name] and players[name].keep then
 			data_out[name] = v
 		end
+	end
+
+	local f = assert(io.open(filename, 'w'))
+	f:write('return ')
+	mtio.serialize(data_out, f)
+	f:close()
+end
+
+mtio.rewrite_xban_db = function(world_path, players)
+	local filename = world_path..'/xban.db'
+	local data_in  = dofile(filename)
+	local data_out = dofile(filename)
+
+	local count1 = 0
+	local count2 = 0
+	for i, t in pairs(data_in) do
+		if type(t) == 'table' and not t.banned then -- Don't touch ban records.
+			for name,_ in pairs(t.names) do
+				if not string.find(name, '%.') then -- Skip IP addressess.
+					if not players[name] then -- Not in auth.
+						count1 = count1 + 1
+						data_out[i].names[name] = nil
+					elseif not players[name].keep then -- In auth but is being pruned.
+						count2 = count2 + 1
+						data_out[i].names[name] = nil
+					end
+				end
+			end
+		end
+	end
+
+	if count1 > 0 or count2 > 0 then
+		print('Pruned '..count2..' player names from xban.db and')
+		print('removed '..count1..' additional names not in auth.')
 	end
 
 	local f = assert(io.open(filename, 'w'))
